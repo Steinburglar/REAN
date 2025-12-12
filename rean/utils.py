@@ -5,29 +5,34 @@ from pathlib import Path
 
 
 def rot_img(x, theta):
-    """ Rotate 2D images
+    """Rotate 2D images.
     Args:
         x : input images with shape [N, C, H, W]
-        N is the batch dimension
         theta: angle (in radians) of rotation
     Returns:
         rotated images
     """
-    # Rotation Matrix (2 x 3)
-    rot_mat = torch.FloatTensor([[np.cos(theta), -np.sin(theta), 0],
-                                 [np.sin(theta), np.cos(theta), 0]])
+    device = x.device
+    dtype = x.dtype
 
-    # The affine transformation matrices should have the shape of N x 2 x 3
-    rot_mat = rot_mat.repeat(x.shape[0],1,1)
+    # Rotation matrix (2 x 3) on the same device/dtype as x
+    rot_mat = torch.tensor(
+        [[np.cos(theta), -np.sin(theta), 0.0],
+         [np.sin(theta),  np.cos(theta), 0.0]],
+        dtype=dtype,
+        device=device
+    )
 
-    # Obtain transformed grid
-    # grid is the coordinates of pixels for rotated image
-    # F.affine_grid assumes the origin is in the middle
-    # and it rotates the positions of the coordinates
-    # r(f(x)) = f(r^-1 x)
-    grid = F.affine_grid(rot_mat, x.size(), align_corners=False).float()
-    x = F.grid_sample(x, grid)
-    return x.float()
+    # Expand to N x 2 x 3
+    rot_mat = rot_mat.unsqueeze(0).repeat(x.shape[0], 1, 1)
+
+    # Grid on same device, with explicit align_corners
+    grid = F.affine_grid(rot_mat, x.size(), align_corners=False)
+
+    # Use same align_corners here too
+    x_rot = F.grid_sample(x, grid, align_corners=False)
+
+    return x_rot
 
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)

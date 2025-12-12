@@ -244,7 +244,7 @@ class RelaxedP4CNN(torch.nn.Module):
         return logits
 
 
-def regularization_loss(model, alpha=1.0):
+def regularization_loss(model, alpha=0.01):
     """ computes the appropriate regularization loss for a relaxed equivariant model.
     Args: model: a relaxed equivariant model
     the model will have a first layer, some gconv layers, and a final layer (plus a linear classifier)

@@ -105,6 +105,7 @@ def train_full(model_name, num_epochs, train_ds, val_ds, device, batch_size=64 ,
                 "epochs": num_epochs,
                 "model_name": model_name,
                 "learning_rate": learning_rate,
+                "kwargs": kwargs
                 }
 
     for epoch in range(num_epochs):

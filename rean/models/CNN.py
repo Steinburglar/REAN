@@ -23,7 +23,6 @@ class PlainCNN(nn.Module):
         self.hiddens = nn.Sequential(*self.hiddens)
         self.last = nn.Conv2d(hidden_dim, out_channels, kernel_size=kernel_size, padding=kernel_size // 2)
         self.linear = nn.Linear(out_channels, classes) #we will do global average pooling before this layer
-
     def forward(self, x):
         x = F.relu(self.first(x))
         x = self.hiddens(x) #hiddens already has ReLU activations
