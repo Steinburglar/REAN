@@ -28,6 +28,8 @@ class LossPlot:
         self.title = title
         self.xlabel = xlabel
         self.ylabel = ylabel
+        self.train = train
+        self.val = val
         #setup matplotlib figure and axes
         self.ax = ax
         self.labels = labels
@@ -38,8 +40,10 @@ class LossPlot:
             # Construct label from specified attributes
             label = " - ".join([str(run_data[attr]) for attr in self.labels])
             epochs = range(1, run_data["epochs"] + 1)
-            self.ax.plot(epochs, run_data["train_loss"], label=label + " Train Loss")
-            self.ax.plot(epochs, run_data["val_loss"], label= label+ " Val Loss")
+            if self.train:
+                self.ax.plot(epochs, run_data["train_loss"], label=label + " Train Loss")
+            if self.val:
+                self.ax.plot(epochs, run_data["val_loss"], label= label+ " Val Loss")
         self.ax.set_title(self.title)
         self.ax.set_xlabel(self.xlabel)
         self.ax.set_ylabel(self.ylabel)
