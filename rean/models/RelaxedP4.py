@@ -133,7 +133,7 @@ class Relaxed_GroupConv(nn.Module):
         self.weight.data.uniform_(-stdv, stdv)
 
         # If combination_weights are equal values, then the model is still equivariant
-        # self.combination_weights.data.uniform_(-stdv, stdv)
+        self.combination_weights.data.uniform_(-stdv, stdv)
 
 
     def generate_filter_bank(self):

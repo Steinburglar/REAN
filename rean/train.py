@@ -90,7 +90,7 @@ def train_full(model_name, num_epochs, train_ds, val_ds, device, batch_size=64 ,
     pred_loss = nn.CrossEntropyLoss()
 
     if model_name.lower() == "relaxedp4cnn":
-        reg_loss = regularization_loss # Example regularization weight
+        reg_loss = regularization_loss(alpha = 0.02) # Example regularization weight
     else:
         reg_loss = lambda model: 0 # No regularization for other models
 

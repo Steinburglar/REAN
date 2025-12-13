@@ -1,0 +1,13 @@
+model_name,noise_type,std,test__noisy_acc,test_clean_acc
+P4CNN,iso,0.1,95.64,39.06
+P4CNN,iso,0.2,94.49,85.41
+P4CNN,iso,0.3,93.71,93.36
+P4CNN,aniso,0.1,95.35,81.85
+P4CNN,aniso,0.2,93.5,94.11
+P4CNN,aniso,0.3,91.28,88.17
+RelaxedP4CNN,iso,0.1,92.69,76.74
+RelaxedP4CNN,iso,0.2,92.73,80.82
+RelaxedP4CNN,iso,0.3,90.74,61.7
+RelaxedP4CNN,aniso,0.1,94.79,95.22
+RelaxedP4CNN,aniso,0.2,89.33,78.59
+RelaxedP4CNN,aniso,0.3,11.35,11.35
