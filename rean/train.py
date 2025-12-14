@@ -72,11 +72,22 @@ def get_model(model_name, **kwargs):
     return model
 
 def _find_run_dir(runs_root: str, model_name: str, learning_rate: float, kwargs: Dict[str, Any]) -> Optional[Path]:
+    """
+    Look only in the immediate children of `runs_root`. First try an exact folder name
+    constructed from the parameters, then fall back to checking `run_data.json` files
+    in each direct subdirectory. Returns a `Path` or `None`.
+    """
     root = Path(runs_root)
-    if not root.exists():
+    if not root.exists() or not root.is_dir():
         return None
-    candidates = []
-    # First pass: try to match using run_data.json content
+
+    # exact expected directory name (no fuzzy/substring matching)
+    name_parts = [model_name] + [f"{k}{v}" for k, v in sorted(kwargs.items())] + [f"lr{learning_rate}"]
+    expected_dir = root / "_".join(name_parts)
+    if expected_dir.exists() and expected_dir.is_dir():
+        return expected_dir
+
+    # check run_data.json only in immediate subdirectories
     for d in root.iterdir():
         if not d.is_dir():
             continue
@@ -90,35 +101,17 @@ def _find_run_dir(runs_root: str, model_name: str, learning_rate: float, kwargs:
             continue
         if rd.get("model_name", "").lower() != model_name.lower():
             continue
-        # compare learning rate if present
         try:
             if "learning_rate" in rd and float(rd["learning_rate"]) != float(learning_rate):
                 continue
         except Exception:
             continue
-        # compare kwargs (require equality)
         if "kwargs" in rd and rd["kwargs"] != kwargs:
             continue
-        candidates.append(d)
+        return d
 
-    if candidates:
-        # return most recently modified
-        return max(candidates, key=lambda p: p.stat().st_mtime)
-
-    # Fallback: try matching based on directory name substrings
-    lr_token = f"lr{learning_rate}"
-    substrings = [f"{k}{v}" for k, v in sorted(kwargs.items())]
-    for d in root.iterdir():
-        if not d.is_dir():
-            continue
-        name = d.name.lower()
-        if not name.startswith(model_name.lower()):
-            continue
-        if lr_token.lower() not in name:
-            continue
-        if all(s.lower() in name for s in substrings):
-            return d
     return None
+
 
 def _load_model_state_if_exists(model: torch.nn.Module, run_dir: Path, device):
     # Support multiple filename variants
