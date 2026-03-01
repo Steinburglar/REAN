@@ -1,0 +1,15 @@
+experiments/*                 # in general, dont include experiements
+
+!experiments/production/*     # but include the production experiment
+!experiments/README.md        # and the readme for the experiments folder
+
+
+**/__pycache__/
+**/.ipynb_checkpoints/
+*.log
+
+
+datasets/                      # in general, dont include datasets
+!datasets/README.md            # but include any readme for the datasets folder
+!datasets/mnist/               # but include the mnist dataset
+!datasets/cifar10/             # but include the cifar10 dataset

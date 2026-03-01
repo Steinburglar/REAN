@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from .. utils import rot_img, count_parameters
+from ..utils.utils import rot_img, count_parameters
 
 
 class Relaxed_LiftingConvolution(nn.Module):

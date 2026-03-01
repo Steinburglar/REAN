@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from torchvision import transforms
-from   .. utils import rot_img
+from   ..utils.utils import rot_img
 import math
 from torchvision.transforms import functional as TF
 from torchvision.transforms import InterpolationMode
@@ -37,7 +37,7 @@ class IsoNoise:
         return x + noise
 
 class AnisoNoise:
-    """Add anisotropic Gaussian noise to the image, -no correlations
+    """ Add anisotropic Gaussian noise to the image, -no correlations
     uses a bifurcated horizontal sine pattern
     Acts on a single image of shape [C, H, W].
     """
@@ -67,12 +67,3 @@ class AnisoNoise:
 
     def alpha(self):
         return self.alpha
-
-
-
-
-
-
-
-
-

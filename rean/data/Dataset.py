@@ -5,18 +5,35 @@ from rean.data.DataTransforms import RandomGroupRotation, IsoNoise, AnisoNoise
 import numpy as np
 
 def make_datasets(
-        dataname = "mnist", #can be "mnist" or "cifar10"
-        group_order =4, #order of the rotation group for data augmentation
-        train_noise = None, #can be None, "none", "iso", or "aniso"
-        test_noise = None, #can be None, "iso", or "aniso"
-        noise_params = {}, #dictionary of parameters for the noise transforms
-        root = './data', #root directory for the dataset
-        rotate_train =  True,
-        rotate_test = True #whether to apply random rotations during training
+        dataname = "mnist",         #can be "mnist" or "cifar10"
+        group_order =4,             #order of the rotation group for data augmentation
+        train_noise = None,         #can be None, "none", "iso", or "aniso"
+        test_noise = None,          #can be None, "iso", or "aniso"
+        noise_params = {},          #dictionary of parameters for the noise transforms
+        root = './datasets',        #root directory for the dataset
+        rotate_train =  True,       #whether to apply random rotations during training
+        rotate_test = True 
     ):
-    """Create training and test datasets with specified transformations"""
+    """
+    Create training and test datasets with specified transformations
+    Args:
+    - dataname (str): Name of the dataset ("mnist" or "cifar10" currently supported)
+    - group_order (int): Order of the rotation group for data augmentation (e.g.,
+        4 for 90 degree rotations)
+    - train_noise (str or None): Type of noise to add to training data ("iso", "aniso", "none", or None)
+    - test_noise (str or None): Type of noise to add to test data ("iso", "aniso", "none", or None)
+    - noise_params (dict): Dictionary of parameters for the noise transforms (e.g., {"std": 0.1, "gamma": 0.5})
+    - root (str): Root directory for the dataset
+    - rotate_train (bool): Whether to apply random rotations during training
+    - rotate_test (bool): Whether to apply random rotations during testing
+    Returns:
+    - train_dataset: PyTorch Dataset for training
+    - val_dataset: PyTorch Dataset for validation
+    - test_dataset: PyTorch Dataset for testing
+    - in_channels: Number of input channels for the dataset (1 for MNIST, 3 for CIFAR-10)
+    """
     if dataname.lower() == "mnist":
-        base_dataset = datasets.MNIST #assigning a function to a variable, not calling it yet
+        base_dataset = datasets.MNIST
         in_channels = 1
     elif dataname.lower() == "cifar10":
         base_dataset = datasets.CIFAR10
@@ -24,10 +41,13 @@ def make_datasets(
     else:
         raise ValueError("Unsupported dataset. Choose either 'mnist' or 'cifar10'.")
 
+    #ambiguous argument handling
     if train_noise == "none":
         train_noise = None
     if test_noise == "none":
         test_noise = None
+        
+    
     train_transform = build_transforms(rotate_train, group_order, train_noise, noise_params)
     test_transform = build_transforms(rotate_test, group_order, test_noise, noise_params)
 
@@ -44,14 +64,24 @@ def make_datasets(
 
 
 def build_transforms(rotate, group_order, noise_type, noise_params):
-        transform_list = []
+    """
+    helper function to build the appropriate transforms based on the input arguments
+    Args:
+    - rotate (bool): Whether to apply random rotations
+    - group_order (int): Order of the rotation group for data augmentation (e.g., 4 for 90 degree rotations)
+    - noise_type (str or None): Type of noise to add ("iso", "aniso", or None)
+    - noise_params (dict): Dictionary of parameters for the noise transforms (e.g., {"std": 0.1, "gamma": 0.5})
+    Returns:
+    - transform: A torchvision.transforms.Compose object containing the specified transformations
+    """
+    transform_list = []
 
-        if rotate:
-            transform_list.append(RandomGroupRotation(group_order=group_order)) #expects PIL image?
+    if rotate:
+        transform_list.append(RandomGroupRotation(group_order=group_order)) #expects PIL image?
 
-        transform_list.append(transforms.ToTensor())
-        if noise_type == "iso":
-            transform_list.append(IsoNoise(**noise_params))
-        elif noise_type == "aniso":
-            transform_list.append(AnisoNoise(**noise_params))
-        return transforms.Compose(transform_list)
+    transform_list.append(transforms.ToTensor())
+    if noise_type == "iso":
+        transform_list.append(IsoNoise(**noise_params))
+    elif noise_type == "aniso":
+        transform_list.append(AnisoNoise(**noise_params))
+    return transforms.Compose(transform_list)

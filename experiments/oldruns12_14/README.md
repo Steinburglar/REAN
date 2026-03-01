@@ -1,0 +1,1 @@
+This directory contains old runs of the experiment. The data from these runs are not included in the final report, but were kept here locally. They should only be local not be part of the repository, so ensure they are in the .gitignore file.
