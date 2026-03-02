@@ -1,7 +1,8 @@
-experiments/*                 # in general, dont include experiements
-
-!experiments/production/*     # but include the production experiment
+experiments/**                # in general, dont include experiements
+!experiments/                 # but include the production experiment
 !experiments/README.md        # and the readme for the experiments folder
+!experiements/production/     # but include the production experiment
+!experiments/production/**     # but include the production experiment
 
 
 **/__pycache__/
@@ -9,7 +10,7 @@ experiments/*                 # in general, dont include experiements
 *.log
 
 
-datasets/                      # in general, dont include datasets
+datasets/**                    # in general, dont include datasets
 !datasets/README.md            # but include any readme for the datasets folder
-!datasets/mnist/               # but include the mnist dataset
-!datasets/cifar10/             # but include the cifar10 dataset
+!datasets/MNIST/               # but include the mnist dataset
+!datasets/CIFAR10/             # but include the cifar10 dataset
