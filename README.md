@@ -1,123 +1,82 @@
-<!-- PROJECT LOGO -->
-<p align="center">
-	<img src="figures/noised_examples.png" alt="Logo" width="120" height="120">
-	<h1 align="center">Reduced Equivariance for Anisotropic Noise</h1>
-	<p align="center">
-		Brief project tagline or description goes here.
-		<br />
-		<a href="#getting-started"><strong>Explore the docs »</strong></a>
-		<br />
-		<br />
-		<a href="#usage">View Demo</a>
-		·
-		<a href="#contributing">Contribute</a>
-		·
-		<a href="#license">License</a>
-	</p>
-</p>
+# REAN: Reduced Equivariance for Anisotropic Noise
 
----
+![Noised examples](figures/noised_examples.png)
 
-## Table of Contents
-- [About The Project](#about-the-project)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [Results & Visualizations](#results--visualizations)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+This repository contains code and experiments for studying how strict and relaxed rotational equivariance behave on rotated-MNIST classification under isotropic and anisotropic noise. The code was made for the author's final project in Applied Math 226, Theory of Neural Computing at Harvard University, Fall 2025. The project report is available in `rean_report.pdf`. 
 
----
+Note that the main entry point for running experiments is the notebook `notebooks/experiment.ipynb`. This is because the author used Google colab to run the original experiment in order to have acess to GPU acelleration.
+The notebook can be run on CPU, but will be much faster with a CUDA-enabled GPU.
 
-## About The Project
+## Abstract
 
-Add a detailed description of your project here. Explain the motivation, goals, and what problem it solves.
+Equivariant neural networks have been shown to be more data-efficient and generalizable than non-equivariant counterparts when the target function is known to be equivariant to a symmetry group. Prior work also suggests that when symmetries are only approximate, approximately equivariant models can outperform both standard and strictly equivariant models while retaining strong performance on fully equivariant tasks. In this project, we test that hypothesis using rotated-MNIST with added isotropic and anisotropic noise. Contrary to our initial hypothesis, the fully equivariant model outperforms both the relaxed-equivariant and standard CNN baselines across all tested noise settings.
 
-<p align="center">
-	<img src="path/to/overview.png" alt="Project Overview" width="600">
-</p>
+## Figures
 
----
+Anisotropic noise map used in the experiments:
 
-## Project Structure
+![Anisotropic noise map](figures/aniso_map.png)
 
-```
-<project-root>
-├── data/
-├── rean/
-├── runs/
-├── analysis.ipynb
-├── experiment.ipynb
-├── ...
-```
+## Repository Layout
 
-Briefly describe the purpose of each main folder/file.
+- `rean/`: core package code (models, data pipeline, training, utilities)
+- `notebooks/experiment.ipynb`: main experiment entry point
+- `experiments/`: saved runs and plots (`production/` contains report results, and should not be modified)
+- `figures/`: container for figures to use in this README
+- `tests/`: unit tests for models/data/training utilities
+- `rean_report.pdf`: full project report
 
----
+## Installation
 
-## Getting Started
+Requirements:
 
-Instructions to get a local copy up and running:
+- Python 3.9+
+- A working PyTorch install for your platform (CPU or CUDA)
 
-### Prerequisites
-- List required packages, Python version, etc.
-
-### Installation
-```bash
-# Example
-pip install -r requirements.txt
-```
-
----
-
-## Usage
-
-Provide examples of how to use your code, run experiments, or reproduce results.
+Install the package from the repository root:
 
 ```bash
-python rean/train.py --config configs/example.yaml
+python -m pip install -e .
 ```
 
-<p align="center">
-	<img src="path/to/demo.gif" alt="Demo" width="600">
-</p>
+Install test dependencies (optional):
 
----
+```bash
+python -m pip install -e ".[test]"
+```
 
-## Results & Visualizations
+## Running Experiments (Notebook Entry Point)
 
-Showcase key results, plots, or tables. You can embed images or link to notebooks.
+The primary workflow is in `notebooks/experiment.ipynb`.
 
-<p align="center">
-	<img src="path/to/results.png" alt="Results" width="600">
-</p>
+1. Open the notebook in Jupyter, VS Code, or Google Colab (recommended for GPU access).
+2. Run the setup cells that resolve repository paths and imports.
+3. Configure the sweep variables (model, noise type, noise level, epochs, etc.).
+4. Run the training/evaluation cells.
 
----
+Outputs are written under the selected experiment directory:
 
-## Roadmap
+- `experiments/<experiment_name>/runs/...`: per-run checkpoints and JSON metrics
+- `experiments/<experiment_name>/plots/...`: generated PNG plots and test-accuracy CSVs
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Enhancement 1
-- [ ] Bug fix 1
+## Reproducing Report Results
 
----
+The `experiments/production/` directory contains the canonical run outputs used for the report:
 
-## Contributing
+- `experiments/production/runs/`
+- `experiments/production/plots/`
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+## Testing
 
----
+This repository comes with a few minimal unit tests.
+to run the tests, from repository root:
 
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
+```bash
+pytest -q
+```
 
 ## Contact
 
-Your Name – your.email@example.com
-Project Link: [https://github.com/yourusername/yourproject](https://github.com/yourusername/yourproject)
+- Author: Lucas Steinberger
+- Email: `lsteinberger@fas.harvard.edu`
+- Issues: [Open a GitHub issue](https://github.com/steinburglar/REAN/issues)
