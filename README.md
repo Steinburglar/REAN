@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <p align="center">
-	<img src="path/to/logo.png" alt="Logo" width="120" height="120">
-	<h1 align="center">Project Title</h1>
+	<img src="figures/noised_examples.png" alt="Logo" width="120" height="120">
+	<h1 align="center">Reduced Equivariance for Anisotropic Noise</h1>
 	<p align="center">
 		Brief project tagline or description goes here.
 		<br />

@@ -142,18 +142,27 @@ def train_full(model_name, num_epochs, train_ds, val_ds, device, batch_size=64, 
             run_data = json.load(f)
         with testdatapath.open("r", encoding="utf-8") as f:
             test_data = json.load(f)
+        assert run_data["model_name"] == model_name, \
+            f"Model name in run_data ({run_data['model_name']}) \
+            does not match requested model_name ({model_name})"
+        assert run_data["learning_rate"] == learning_rate, \
+            f"Learning rate in run_data ({run_data['learning_rate']}) \
+            does not match requested learning_rate ({learning_rate})"
+        assert run_data["kwargs"] == kwargs, \
+            f"Model kwargs in run_data ({run_data['kwargs']}) \
+            do not match requested kwargs ({kwargs})"
         run_data.update(test_data)
-
+        # If run_data has a different total epochs recorded, update it to reflect requested TOTAL num_epochs
+        start_epoch = run_data["epochs"]
+        # If we've already completed the desired total epochs, just return loaded model and run_data
+        if start_epoch >= num_epochs:
+            # ensure best model is loaded (already attempted), return as-is
+            return run_data, model
+        
     else:
         run_data = default_run_data
 
-    # If run_data has a different total epochs recorded, update it to reflect requested TOTAL num_epochs
-    start_epoch = run_data["epochs"]
-
-    # If we've already completed the desired total epochs, just return loaded model and run_data
-    if start_epoch >= num_epochs:
-        # ensure best model is loaded (already attempted), return as-is
-        return run_data, model
+    
 
     best_val_acc = 0.0
     best_state = None

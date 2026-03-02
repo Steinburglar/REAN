@@ -1,0 +1,6 @@
+{
+  "test_noisy_loss": 0.12154017879068851,
+  "test__noisy_acc": 96.01,
+  "test_clean_loss": 0.12500301232635974,
+  "test_clean_acc": 96.08
+}
